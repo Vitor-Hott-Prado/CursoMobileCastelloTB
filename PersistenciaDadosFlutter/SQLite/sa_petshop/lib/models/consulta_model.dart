@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 
 class Consulta {
   final int? id; //pode ser nulo
-  final int petId; //chave estrangeita
+  final int petId; //chave estrangeita -  a consulda so vai pra um cliente que ja exite
   final DateTime dataHora;
   final String tipoServico;
   final String observacao;
@@ -20,8 +20,7 @@ class Consulta {
   Map<String, dynamic> toMap() => {
     "id": id,
     "pet_id": petId,
-    "data_hora":
-        dataHora.toIso8601String(), // padrão internacional de hora para BD
+    "data_hora": dataHora.toIso8601String(), // padrão internacional de hora para BD
     "tipo_servico": tipoServico,
     "observacao": observacao,
   };

@@ -1,6 +1,6 @@
 class Pet {
   //atributos -> 
-  final int? id; //pode ser nulo
+  final int? id; //pode ser nulo; pq quem vai atribuir o id vai ser o meu banco de dados
   final String nome;
   final String raca;
   final String nomeDono;

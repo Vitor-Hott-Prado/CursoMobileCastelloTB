@@ -2,6 +2,7 @@
 //classe Singleton -> de objeto unico
 
 import 'package:path/path.dart';
+import 'package:sa_petshop/models/consulta_model.dart';
 import 'package:sa_petshop/models/pet_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
@@ -84,17 +85,38 @@ class DbHelper {
       return null;
     }
   }
-  
-  Future<int> deletePet(int id)async{
+
+  Future<int> deletePet(int id) async {
     final db = await database;
     return await db.delete("pets", where: "id=?", whereArgs: [id]);
     //deleta o pet da tabela que tenha o id igual o envio como parâmetro
-     
   }
 
+  //métodos crud para Consultas
+  // Create Consulta
+  Future<int> insertConsulta(Consulta consulta) async {
+    final db = await database;
+    return await db.insert("consultas", consulta.toMap());
+  }
 
+  //Get Consulta -> By Pet
+  Future<List<Consulta>> getConsultaByPetId(int petId) async{
+    final db = await database;
+    final List<Map<String,dynamic>> maps = await db.query(
+      "consultas",
+      where: "pet_id = ?",
+      whereArgs: [petId],
+      orderBy: "data_hora ASC" // ordem por data e hora da Consula
+    ); //slect from consulta wher pet_id = ?, Pet_id order by data_hora ASC
+    //converter a Mapss em obj
+    return maps.map((e)=>Consulta.fromMap(e)).toList();
+  } 
 
- //métodos crud para Consultas
+  //Delete Consulta
+Future<int> deleteConsulta(int id)async{
+  final db = await database;
+  return await db.delete("consultas", where: "id=?", whereArgs: [id]);
+}
 
-
+ 
 }
