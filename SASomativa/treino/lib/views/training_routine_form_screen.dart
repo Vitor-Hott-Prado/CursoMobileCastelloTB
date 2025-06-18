@@ -1,13 +1,12 @@
-// lib/views/training_routine_form_screen.dart
-// ... (imports conforme o exemplo anterior) ...
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:treino/models/exercise.dart';
 import 'package:treino/models/training_rotine.dart';
 
-class TrainingRoutineFormScreen extends StatefulWidget{
-  final TrainingRoutine? routine; // Opcional para edição
+import 'package:treino/services/exercise_service.dart';
+import 'package:treino/services/training_routine_servece.dart';
+
+class TrainingRoutineFormScreen extends StatefulWidget {
+  final TrainingRoutine? routine;
 
   TrainingRoutineFormScreen({this.routine});
 
@@ -16,24 +15,41 @@ class TrainingRoutineFormScreen extends StatefulWidget{
 }
 
 class _TrainingRoutineFormScreenState extends State<TrainingRoutineFormScreen> {
-  // ... (variáveis e _formKey) ...
-
+  final _formKey = GlobalKey<FormState>();
   late String _routineName;
-  late String _objective; // Adicionado
+  late String _objective;
   List<Exercise> _exercises = [];
+
+  final TrainingRoutineService _routineService = TrainingRoutineService();
+  final ExerciseService _exerciseService = ExerciseService();
 
   @override
   void initState() {
     super.initState();
     _routineName = widget.routine?.name ?? '';
-    _objective = widget.routine?.objective ?? ''; // Inicializa o objetivo
+    _objective = widget.routine?.objective ?? '';
 
     if (widget.routine != null && widget.routine!.id != null) {
-      (widget.routine!.id!);
+      _loadExercisesForRoutine(widget.routine!.id!);
     }
   }
 
-  // ... (métodos _loadExercisesForRoutine, _addOrEditExercise, _removeExercise) ...
+  Future<void> _loadExercisesForRoutine(int routineId) async {
+    final exercises = await _exerciseService.getExercisesByRoutineId(routineId);
+    setState(() {
+      _exercises = exercises;
+    });
+  }
+
+  Future<void> _addOrEditExercise({Exercise? exercise, int? index}) async {
+    // Implemente a lógica de adicionar/editar exercício via diálogo ou nova tela.
+  }
+
+  void _removeExercise(int index) {
+    setState(() {
+      _exercises.removeAt(index);
+    });
+  }
 
   Future<void> _saveRoutine() async {
     if (_formKey.currentState!.validate()) {
@@ -42,28 +58,21 @@ class _TrainingRoutineFormScreenState extends State<TrainingRoutineFormScreen> {
       final newRoutine = TrainingRoutine(
         id: widget.routine?.id,
         name: _routineName,
-        objective: _objective, // Salva o objetivo
+        objective: _objective,
       );
 
       int routineId;
       if (widget.routine == null) {
-        routineId = await _routineName.insertRoutine(newRoutine);
+        routineId = await _routineService.insertRoutine(newRoutine);
       } else {
         await _routineService.updateRoutine(newRoutine);
         routineId = newRoutine.id!;
-
-        // Se estiver editando, é uma boa prática limpar e recriar os exercícios
-        // para evitar complexidade de upsert individual.
-        // Certifique-se que seu ExerciseService tem deleteExercisesByRoutineId
         await _exerciseService.deleteExercisesByRoutineId(routineId);
       }
 
       for (var exercise in _exercises) {
         exercise.routineId = routineId;
-        // Não precisa verificar exercise.id aqui, pois estamos inserindo tudo novamente
-        // após deletar os antigos para esta rotina. Se você não deletar antes,
-        // precisará verificar se é insert ou update.
-        await _.insertExercise(exercise);
+        await _exerciseService.insertExercise(exercise);
       }
 
       Navigator.pop(context, true);
@@ -79,7 +88,7 @@ class _TrainingRoutineFormScreenState extends State<TrainingRoutineFormScreen> {
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Form(
-          key: ,
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -92,13 +101,13 @@ class _TrainingRoutineFormScreenState extends State<TrainingRoutineFormScreen> {
               SizedBox(height: 16),
               TextFormField(
                 initialValue: _objective,
-                decoration: InputDecoration(labelText: 'Objetivo (Ex: Força, Hipertrofia)'), // Campo objetivo
+                decoration: InputDecoration(labelText: 'Objetivo (Ex: Força, Hipertrofia)'),
                 onSaved: (value) => _objective = value!.trim(),
               ),
               SizedBox(height: 20),
               Text(
                 'Exercícios:',
-                style: Theme.of(context).textTheme.titleLarge, // Correção para headline6
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               ElevatedButton.icon(
                 onPressed: () => _addOrEditExercise(),

@@ -32,7 +32,7 @@ class TrainingRoutineService {
     // Se você quiser carregar os exercícios na lista principal também (para ExpansionTile)
     for (var routine in routines) {
       if (routine.id != null) {
-        routine.exercise = await _exerciseService.getExercisesByRoutineId(routine.id!);
+        routine.exercises = await _exerciseService.getExercisesByRoutineId(routine.id!);
       }
     }
     return routines;
