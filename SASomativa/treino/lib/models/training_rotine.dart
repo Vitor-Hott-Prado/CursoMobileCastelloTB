@@ -1,44 +1,41 @@
-class TrainingRoutine {
-  // O 'id' será gerado automaticamente pelo banco de dados.
-  // Será útil para identificar e manipular rotinas específicas (atualizar, deletar).
-  int? id;
-  // Nome da rotina (ex: "Treino de Força A", "Cardio Matinal").
-  String name;
-  // Objetivo da rotina (ex: "Ganho de Massa", "Perda de Peso").
-  String objective;
+// lib/models/training_rotine.dart
+import 'package:treino/models/exercise.dart';
 
-  // Construtor para criar uma nova instância de TrainingRoutine.
-  // O 'id' é opcional pois ele só existirá após a rotina ser salva no banco.
+class TrainingRoutine {
+  int? id;
+  String name;
+  String objective;
+  // Mude de List<Exercise>? para List<Exercise> e inicialize com []
+  List<Exercise> exercises; // <--- CORRIGIDO AQUI: Não mais anulável, inicializado no construtor
+
   TrainingRoutine({
     this.id,
     required this.name,
     required this.objective,
+    this.exercises = const [], // <--- CORRIGIDO AQUI: Valor padrão para lista vazia
   });
-
-  // Método para converter um objeto TrainingRoutine em um Map.
-  // Isso é necessário para salvar os dados no banco de dados SQLite.
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id, // O id pode ser nulo ao inserir, o banco cuida disso.
+      'id': id,
       'name': name,
       'objective': objective,
     };
   }
 
-  // Método estático (factory constructor) para criar um objeto TrainingRoutine a partir de um Map.
-  // Isso é usado quando você lê dados do banco de dados SQLite.
   factory TrainingRoutine.fromMap(Map<String, dynamic> map) {
     return TrainingRoutine(
       id: map['id'],
       name: map['name'],
       objective: map['objective'],
+      // Ao carregar do mapa, a lista de exercícios será preenchida
+      // pelo serviço se houver, caso contrário, será a lista padrão vazia.
+      exercises: [], // <--- CORRIGIDO AQUI: Inicializa como lista vazia ao criar do mapa
     );
   }
 
-  // Sobrescreve o método toString para facilitar a depuração.
   @override
   String toString() {
-    return 'TrainingRoutine(id: $id, name: $name, objective: $objective)';
+    return 'TrainingRoutine{id: $id, name: $name, objective: $objective, exercises: $exercises}';
   }
 }

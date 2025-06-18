@@ -14,7 +14,7 @@ class ExerciseFormScreen extends StatefulWidget {
 
 class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
   final _formKey = GlobalKey<FormState>();
-  final ExerciseDbHelper _exerciseService = ExerciseDbHelper();
+  final  _exerciseService = ExerciseService();
 
   late String _name;
   late int _series;

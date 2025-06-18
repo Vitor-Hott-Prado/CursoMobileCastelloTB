@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:treino/services/exercise_service.dart';
 import '../models/training_rotine.dart';
 import '../models/exercise.dart';
-import '../services/exercise_service.dart';  // certifique-se do caminho correto
+// certifique-se do caminho correto
 
 class ExerciseController with ChangeNotifier {
-  final ExerciseDbHelper _exerciseService = ExerciseDbHelper();
+  final ExerciseService _exerciseService = ExerciseService();
 
   List<Exercise> _exercises = [];
   List<Exercise> get exercises => _exercises;

@@ -1,87 +1,60 @@
-import 'package:path/path.dart';
+// lib/services/exercise_service.dart
 import 'package:sqflite/sqflite.dart';
-import '../models/exercise.dart';
+import 'package:treino/models/exercise.dart';
+import 'package:treino/services/database_helepr.dart';
+ // Seu helper de DB
 
-class ExerciseDbHelper {
-  static const String DB_NAME = "treino_app.db";
-  static const String TABLE_NAME = "exercises";
+class ExerciseService { // Renomeado de ExerciseDbHelper para ExerciseService para consistência
+  final DatabaseHelper _dbHelper = DatabaseHelper();
 
-  static const String CREATE_TABLE_SQL = '''
-    CREATE TABLE IF NOT EXISTS $TABLE_NAME (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      routineId INTEGER NOT NULL,
-      name TEXT NOT NULL,
-      series INTEGER NOT NULL,
-      repetitions TEXT NOT NULL,
-      load TEXT NOT NULL,
-      type TEXT NOT NULL
-    )
-  ''';
-
-  Database? _database;
-
-  // Retorna a instância ativa do banco de dados
-  Future<Database> get database async {
-    if (_database != null) return _database!;
-    _database = await _initDatabase();
-    return _database!;
-  }
-
-  // Inicializa o banco
-  Future<Database> _initDatabase() async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, DB_NAME);
-
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute(CREATE_TABLE_SQL);
-        // Você pode criar a tabela de rotinas aqui também, se quiser manter tudo em um helper
-      },
-    );
-  }
-
-  // ===============================
-  // CRUD para Exercícios
-  // ===============================
-
-  // CREATE
   Future<int> insertExercise(Exercise exercise) async {
-    final db = await database;
-    return await db.insert(TABLE_NAME, exercise.toMap());
-  }
-
-  // READ (listar todos os exercícios de uma rotina)
-  Future<List<Exercise>> getExercisesByRoutineId(int routineId) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      TABLE_NAME,
-      where: "routineId = ?",
-      whereArgs: [routineId],
-    );
-
-    return maps.map((e) => Exercise.fromMap(e)).toList();
-  }
-
-  // UPDATE
-  Future<int> updateExercise(Exercise exercise) async {
-    final db = await database;
-    return await db.update(
-      TABLE_NAME,
+    final db = await _dbHelper.database;
+    return await db.insert(
+      DatabaseHelper.TABLE_EXERCISES,
       exercise.toMap(),
-      where: "id = ?",
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<List<Exercise>> getExercisesByRoutineId(int routineId) async {
+    final db = await _dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      DatabaseHelper.TABLE_EXERCISES,
+      where: '${DatabaseHelper.COLUMN_EXERCISE_ROUTINE_ID} = ?',
+      whereArgs: [routineId],
+      orderBy: DatabaseHelper.COLUMN_EXERCISE_ID,
+    );
+    return List.generate(maps.length, (i) {
+      return Exercise.fromMap(maps[i]);
+    });
+  }
+
+  Future<int> updateExercise(Exercise exercise) async {
+    final db = await _dbHelper.database;
+    return await db.update(
+      DatabaseHelper.TABLE_EXERCISES,
+      exercise.toMap(),
+      where: '${DatabaseHelper.COLUMN_EXERCISE_ID} = ?',
       whereArgs: [exercise.id],
     );
   }
 
-  // DELETE
   Future<int> deleteExercise(int id) async {
-    final db = await database;
+    final db = await _dbHelper.database;
     return await db.delete(
-      TABLE_NAME,
-      where: "id = ?",
+      DatabaseHelper.TABLE_EXERCISES,
+      where: '${DatabaseHelper.COLUMN_EXERCISE_ID} = ?',
       whereArgs: [id],
+    );
+  }
+
+  // Novo método crucial para deletar exercícios de uma rotina específica
+  Future<int> deleteExercisesByRoutineId(int routineId) async {
+    final db = await _dbHelper.database;
+    return await db.delete(
+      DatabaseHelper.TABLE_EXERCISES,
+      where: '${DatabaseHelper.COLUMN_EXERCISE_ROUTINE_ID} = ?',
+      whereArgs: [routineId],
     );
   }
 }
