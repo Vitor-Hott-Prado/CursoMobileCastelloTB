@@ -1,13 +1,16 @@
+// Importações dos pacotes do Flutter e arquivos do seu projeto
 import 'package:flutter/material.dart';
 import 'package:treino/models/training_rotine.dart';
 import 'package:treino/services/training_routine_servece.dart';
 import 'package:treino/views/routine_detail_screen.dart';
-import 'package:treino/views/training_routine_form_screen.dart'; // Importe sua tela de formulário
+import 'package:treino/views/training_routine_form_screen.dart'; // Tela de criação/edição de rotina
 
+// Função principal que inicia o app
 void main() {
   runApp(TreinoApp());
 }
 
+// Widget raiz do app
 class TreinoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -16,26 +19,28 @@ class TreinoApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: TrainingRoutineListScreen(),
+      home: TrainingRoutineListScreen(), // Tela inicial
     );
   }
 }
 
+// Tela que lista todas as rotinas de treino
 class TrainingRoutineListScreen extends StatefulWidget {
   @override
   _TrainingRoutineListScreenState createState() => _TrainingRoutineListScreenState();
 }
 
 class _TrainingRoutineListScreenState extends State<TrainingRoutineListScreen> {
-  final TrainingRoutineService _service = TrainingRoutineService();
-  List<TrainingRoutine> _routines = [];
+  final TrainingRoutineService _service = TrainingRoutineService(); // Serviço para banco
+  List<TrainingRoutine> _routines = []; // Lista de rotinas
 
   @override
   void initState() {
     super.initState();
-    _loadRoutines();
+    _loadRoutines(); // Carrega rotinas ao iniciar
   }
 
+  // Busca rotinas do banco e atualiza a lista
   Future<void> _loadRoutines() async {
     final routines = await _service.getRoutines();
     setState(() {
@@ -43,6 +48,7 @@ class _TrainingRoutineListScreenState extends State<TrainingRoutineListScreen> {
     });
   }
 
+  // Navega para tela de adicionar nova rotina
   void _goToAddRoutine() async {
     final created = await Navigator.push(
       context,
@@ -50,10 +56,11 @@ class _TrainingRoutineListScreenState extends State<TrainingRoutineListScreen> {
     );
 
     if (created == true) {
-      _loadRoutines();
+      _loadRoutines(); // Atualiza lista ao voltar
     }
   }
 
+  // Abre os detalhes da rotina selecionada
   void _openRoutineDetail(TrainingRoutine routine) {
     Navigator.push(
       context,
@@ -61,16 +68,19 @@ class _TrainingRoutineListScreenState extends State<TrainingRoutineListScreen> {
     );
   }
 
+  // Edita uma rotina existente
   void _goToEditRoutine(TrainingRoutine routine) async {
     final updated = await Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => TrainingRoutineFormScreen(routine: routine)),
     );
+
     if (updated == true) {
-      _loadRoutines();
+      _loadRoutines(); // Recarrega lista após edição
     }
   }
 
+  // Exclui uma rotina após confirmação
   Future<void> _deleteRoutine(int routineId) async {
     final confirm = await showDialog<bool>(
       context: context,
@@ -107,17 +117,18 @@ class _TrainingRoutineListScreenState extends State<TrainingRoutineListScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.refresh),
-            onPressed: _loadRoutines,
+            onPressed: _loadRoutines, // Atualiza manualmente
             tooltip: 'Atualizar lista',
           ),
         ],
       ),
       body: _routines.isEmpty
-          ? Center(child: Text('Nenhuma rotina cadastrada'))
+          ? Center(child: Text('Nenhuma rotina cadastrada')) // Quando não há rotinas
           : ListView.builder(
               itemCount: _routines.length,
               itemBuilder: (_, index) {
                 final routine = _routines[index];
+
                 return Card(
                   margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   elevation: 3,
@@ -131,7 +142,8 @@ class _TrainingRoutineListScreenState extends State<TrainingRoutineListScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: (routine.exercises == null || routine.exercises!.isEmpty) // <--- CORREÇÃO AQUI
+                          // Verifica se há exercícios; evita erro de null
+                          children: (routine.exercises == null || routine.exercises!.isEmpty)
                               ? [Text('Nenhum exercício nesta rotina.')]
                               : routine.exercises!.map((exercise) {
                                   return Padding(

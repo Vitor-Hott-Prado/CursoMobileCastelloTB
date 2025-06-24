@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import '../models/exercise.dart';
 import '../services/exercise_service.dart';
 
+/// Tela de formulário para adicionar ou editar um exercício
 class ExerciseFormScreen extends StatefulWidget {
-  final int routineId;
-  final Exercise? exercise; // opcional para edição
+  final int routineId; // ID da rotina à qual o exercício pertence
+  final Exercise? exercise; // Exercício existente, se for edição
 
   ExerciseFormScreen({required this.routineId, this.exercise});
 
@@ -13,9 +14,10 @@ class ExerciseFormScreen extends StatefulWidget {
 }
 
 class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final  _exerciseService = ExerciseService();
+  final _formKey = GlobalKey<FormState>(); // Chave para validar o formulário
+  final _exerciseService = ExerciseService(); // Serviço para operações no banco
 
+  // Variáveis para armazenar os dados do formulário
   late String _name;
   late int _series;
   late String _repetitions;
@@ -26,6 +28,7 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
   void initState() {
     super.initState();
 
+    // Inicializa os campos com os dados do exercício se for edição
     _name = widget.exercise?.name ?? '';
     _series = widget.exercise?.series ?? 1;
     _repetitions = widget.exercise?.repetitions ?? '';
@@ -33,12 +36,13 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
     _type = widget.exercise?.type ?? '';
   }
 
+  /// Salva o exercício no banco (inserção ou atualização)
   Future<void> _saveExercise() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
       final exercise = Exercise(
-        id: widget.exercise?.id,
+        id: widget.exercise?.id, // Se for edição, mantém o ID
         routineId: widget.routineId,
         name: _name,
         series: _series,
@@ -47,13 +51,14 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
         type: _type,
       );
 
+      // Decide se vai inserir ou atualizar com base em `widget.exercise`
       if (widget.exercise == null) {
         await _exerciseService.insertExercise(exercise);
       } else {
         await _exerciseService.updateExercise(exercise);
       }
 
-      Navigator.pop(context);
+      Navigator.pop(context); // Retorna para a tela anterior
     }
   }
 
@@ -69,6 +74,7 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
           key: _formKey,
           child: ListView(
             children: [
+              // Campo Nome
               TextFormField(
                 initialValue: _name,
                 decoration: InputDecoration(labelText: 'Nome do Exercício'),
@@ -76,6 +82,8 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
                 onSaved: (value) => _name = value!.trim(),
               ),
               SizedBox(height: 16),
+
+              // Campo Séries
               TextFormField(
                 initialValue: _series.toString(),
                 decoration: InputDecoration(labelText: 'Séries'),
@@ -88,6 +96,8 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
                 onSaved: (value) => _series = int.parse(value!),
               ),
               SizedBox(height: 16),
+
+              // Campo Repetições
               TextFormField(
                 initialValue: _repetitions,
                 decoration: InputDecoration(labelText: 'Repetições'),
@@ -95,6 +105,8 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
                 onSaved: (value) => _repetitions = value!.trim(),
               ),
               SizedBox(height: 16),
+
+              // Campo Carga
               TextFormField(
                 initialValue: _load,
                 decoration: InputDecoration(labelText: 'Carga'),
@@ -102,6 +114,8 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
                 onSaved: (value) => _load = value!.trim(),
               ),
               SizedBox(height: 16),
+
+              // Campo Tipo
               TextFormField(
                 initialValue: _type,
                 decoration: InputDecoration(labelText: 'Tipo (Força, Cardio, Alongamento, etc.)'),
@@ -109,6 +123,8 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
                 onSaved: (value) => _type = value!.trim(),
               ),
               SizedBox(height: 32),
+
+              // Botão de salvar
               ElevatedButton(
                 onPressed: _saveExercise,
                 child: Text('Salvar'),
