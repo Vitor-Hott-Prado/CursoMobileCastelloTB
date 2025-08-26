@@ -1,0 +1,40 @@
+{
+    "usuarios":[
+        {
+            "id":1,
+            "nome":"Vitor",
+            "email":"vitor@gmail.com"
+        },
+        {
+            "id":2,
+            "nome":"Pyerre",
+            "email":"pyerre@gmail.com"
+        }
+    ],
+    "livro":[
+        {
+         "id":1,
+         "titulo": "Senhor dos Aneis",
+         "autor":"J.R.R. Tolkien (John Ronald Reuel Tolkien).",
+         "Disponivel": false
+        },
+        {
+            "id":1,
+            "titulo":"O Guia do Mochileiro das Galaxias",
+            "autor":"Douglas Adams",
+            "Disponivel": true
+        }
+
+    ],
+     "emprestimos":[
+        {
+            "id":1,
+            "usuarioId":1,
+            "livroId":1,
+            "dataEmprestismo":"2025-08-26",
+            "dataDevolucao":"2025-09-05",
+            "devolvido":false
+        }
+
+    ]
+}
