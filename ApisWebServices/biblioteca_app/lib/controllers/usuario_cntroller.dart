@@ -28,12 +28,11 @@ class UsuarioContoller{
  }
 
 //PUT
- Future<UsuarioModel> update(UsuarioModel u) async{
-  final updated = await ApiService.put("usuario", u.toJson());
-  // retorna  usúario atualizado
-  return UsuarioModel.fromJson(updated);
-  
- }
+  Future<UsuarioModel> create(UsuarioModel u) async{
+    final created = await ApiService.put("usuarios", u.id.toString(), u.toJson());
+    //adicionar o usuário e retorna o usuario adicionado
+    return UsuarioModel.fromJson(created);
+  }
 
  // Delete
   Future<void> delete(String id) async{
@@ -41,6 +40,8 @@ class UsuarioContoller{
     //não tm retorno
     
   }
+
+  Future<void> update(UsuarioModel usuarioAtualizado) async {}
 
 
 }

@@ -1,3 +1,4 @@
+
 import 'package:biblioteca_app/viws/empretimos/empretimos_list_view.dart';
 import 'package:biblioteca_app/viws/livros/livros_list_view.dart';
 import 'package:biblioteca_app/viws/usuario/usuario_list_view.dart';
@@ -11,13 +12,15 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  //atributos de navegação 
+  // atributos de navegação 
   int _index = 0;
-  final List<Widget> _paginas =[
-    const LivrosListView(),
-    const EmpretimosListView(),
+  //lista de páginas de navegação
+  final List<Widget> _paginas = [
+    const LivroListView(),
+    const EmprestimoListView(),
     const UsuarioListView()
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,10 +31,10 @@ class _HomeViewState extends State<HomeView> {
         onTap: (i) => setState(() {
           _index = i;
         }),
-         items: [
+        items: [
           BottomNavigationBarItem(icon: Icon(Icons.menu_book), label:"Livros"),
-          BottomNavigationBarItem(icon: Icon(Icons.assignment), label:"Empre"),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label:"Livros"),
+          BottomNavigationBarItem(icon: Icon(Icons.assignment), label:"Empréstimos"),
+          BottomNavigationBarItem(icon: Icon(Icons.people), label:"Usuários"),
         ]),
     );
   }

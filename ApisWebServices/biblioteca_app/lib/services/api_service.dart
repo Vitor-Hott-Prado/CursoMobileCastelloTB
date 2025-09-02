@@ -5,7 +5,7 @@ class ApiService {
   //atributos e métodos da classe e não do objeto
   // base URL para conexão API
   // static -> transforma o atributo em atributo da classe e não Obj
-  static const String _baseUrl = "http://10.109.197.3:3005";
+  static const String _baseUrl = "http://10.109.197.4:3005";
 
   // -------------------------------------------------------------------------------------------
   //métodos

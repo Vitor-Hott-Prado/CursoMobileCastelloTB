@@ -9,6 +9,10 @@
             "id":2,
             "nome":"Pyerre",
             "email":"pyerre@gmail.com"
+        },
+        {   "id":2,
+            "nome":"Lais",
+            "email":"laishott@gmail.com"
         }
     ],
     "livro":[

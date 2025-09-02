@@ -24,7 +24,7 @@ class EmprestiomoCntroller {
   }
   //PUT
   Future<EmprestimoModel> update(EmprestimoModel e) async {
-    final updated = await ApiService.put("emprestimos", e.toJson());
+    final updated = await ApiService.put("emprestimos", e.id.toString(), e.toJson());
     return EmprestimoModel.fromJson(updated);
   }
   //Delete

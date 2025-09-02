@@ -27,7 +27,7 @@ class LivroController {
 
 //PUT
  Future<LivroModel> update(LivroModel l) async{
-  final updated = await ApiService.put("livros", l.toJson());
+  final updated = await ApiService.put("livros", l.id.toString(), l.toJson());
   return LivroModel.fromJson(updated);
  }
  

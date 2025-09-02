@@ -1,15 +1,13 @@
-import 'package:biblioteca_app/viws/home_view.dart';
 import 'package:flutter/material.dart';
 
 void main(){
   runApp(MaterialApp(
-    title: "Blinlioteca ",
+    title: "Biblioteca",
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
-      primarySwatch: Colors.blue,
+      primarySwatch: Colors.amber,
       useMaterial3: true
-      ),
-      home: HomeView(),
-      ));
-
+    ),
+    home: HomeView(),
+  ));
 }
