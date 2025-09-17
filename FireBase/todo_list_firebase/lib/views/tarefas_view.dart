@@ -27,7 +27,7 @@ class _TarefasViewState extends State<TarefasView> {
         "criadaEm":Timestamp.now()
       });
       _tarefaField.clear();
-      
+
       
     }
   }
