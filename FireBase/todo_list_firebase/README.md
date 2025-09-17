@@ -1,13 +1,37 @@
-estrutura do meu DB
+## estrutura do meu DB
 
+## dentrp do Firebase - > Banco de Dados Vertical
+
+DB(default)
 {
-    Users :[
-        uid1:{
-            tarefas:[
-                {}
-            ]
+    "usuarios":[
+        "user1":{
+            "tarefas":[
+                {
+                    "id":"asd123",
+                    "titulo":"a",
+                    "concluida":false,
+                    "dataCriacao":12345678
+                },
+                {
+                    "id":"asd123",
+                    "titulo":"a",
+                    "concluida":false,
+                    "dataCriacao":12345678
+                }
+            ],
+            "ListadeCompras":[
+                { 
+                        lista de compra1
+                }
+            ],
+                 
+        "user2":{
+            "tarefas":[
+
+            ],
         }
-        , uid2
-        , uid3
+            
+        }
     ]
 }
