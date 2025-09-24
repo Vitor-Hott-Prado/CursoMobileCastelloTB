@@ -59,4 +59,5 @@ class DefaultFirebaseOptions {
     projectId: 'cine-favorite-67a3d',
     storageBucket: 'cine-favorite-67a3d.firebasestorage.app',
   );
+
 }
