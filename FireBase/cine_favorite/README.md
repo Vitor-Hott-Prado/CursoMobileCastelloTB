@@ -122,7 +122,6 @@ graph TD
     C --> D{Credenciais válidas?}
     D -- Sim --> E[Tela de Favoritos]
     D -- Não --> B
-
 ```
 
 ## Prototipagem
