@@ -64,21 +64,21 @@ classDiagram
         +readList()
     }
 
-    User "1"--"1+" FavoriteMovie: "save"
+    User "1"--"1+" FavoriteMovie : "save"
 
 ```
 2. ### Uso
- Açoes que os Atores podem fazer
-  - User: 
-  - Registar 
-  - Login
-  - logout 
-  - Procurar Filems API
-  - Salvar Filems API
-  - Dar Not aos Filems 
-  - Remover dos Favoritos
- 
- ```mermaid
+    Ações que os Atores podem FAzer
+    - User:
+        - Registrar
+        - Login
+        - logout
+        - Procurar Filmes API
+        - SAlvar Filmes Favoritos
+        - Dar Nota aos Filmes
+        - Remover dos Favoritos 
+
+```mermaid
 graph TD
     subgraph "Ações"
         uc1([Register])
@@ -90,46 +90,40 @@ graph TD
         uc7([Remove Favorite Movie])
     end
 
-    user --> uc1
-    user --> uc2
-    user --> uc3
-    user --> uc4
-    user --> uc5
-    user --> uc6
+    user([Usuário])
+
+    user --> uc1 
+    user --> uc2 
+    user --> uc3 
+    user --> uc4 
+    user --> uc5 
+    user --> uc6 
     user --> uc7
 
-
     uc1 --> uc2
-    us2 --> uc3
-    us2 --> uc4
-    us2 --> uc5 
-    us2 --> uc6
-    us2 --> uc7 
-    
+    uc2 --> uc3
+    uc2 --> uc4
+    uc2 --> uc5
+    uc2 --> uc6
+    uc2 --> uc7
+
 ```
-
-
 3. ### Fluxo
- Determine o Caminho percorrido pelo aTor para execuar ação 
+    Determina o Caminho percorrido pelo aTor para executar uma ação
 
+    - Ação de Login
 
-- Ação de Login
-
-
-``` mermaid 
-A[iniciio] --> b {Login Usuari}
-
+```mermaid
+grap TD
     A[Ínicio] --> B {Login Usuário}
     B --> C[Inserir Email e Senha] 
     C --> D{Validar as Credenciais}
-    D--> E[Sim]
+    D --> E[Sim]
     E --> F[Tela de Favoritos]
-    D--> G[Não]
-    G --> 
+    D --> G[Não]
+    G --> B
 
 ```
-
-
 
 ## Prototipagem
 
