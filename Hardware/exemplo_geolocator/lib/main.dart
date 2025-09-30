@@ -36,7 +36,7 @@ class _LocationScreenState extends State<LocationScreen> {
           children: [
             Text(locationMessage),
             ElevatedButton(
-              onPressed: getLocation, 
+              onPressed:()async{getLocation;}, 
               child: Text("Obter Localização"))
           ],
         ),
