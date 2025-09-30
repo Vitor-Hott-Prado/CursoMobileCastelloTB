@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 
-void main() async{
+void main() async{ //na main é estabelecidauma conexão com o firebase
   //garantir o carregamento dos widgets primeiro
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -29,6 +29,8 @@ class AuthStream extends StatelessWidget {
   Widget build(BuildContext context) {
     //ouvinte da mudança de status (listener)
     return StreamBuilder<User?>(//permitir retorno null para usuário?
+      //Stream é um listener é um conceito modernos de programação fica esperando algo acontecer 
+      
       //ouvinte da mudança de status do usuário
       stream: FirebaseAuth.instance.authStateChanges(),
       //identifica a mudança de status  do usuário(logado ou não) 
