@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.sa02_geolapi_image"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
