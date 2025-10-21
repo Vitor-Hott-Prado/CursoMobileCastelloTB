@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/point_controller.dart';
-import 'package:intl/intl.dart';
 
 class HistoryView extends StatelessWidget {
   const HistoryView({super.key});
@@ -10,32 +10,46 @@ class HistoryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auth = AuthController();
-    final point = PointController();
-    final user = auth.currentUser!;
+    final pointController = PointController();
+    final user = auth.currentUser;
+
+    if (user == null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Histórico de Pontos')),
+        body: const Center(child: Text('Usuário não logado')),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(title: const Text('Histórico de Pontos')),
       body: StreamBuilder<QuerySnapshot>(
-        stream: point.listarPontos(user.uid),
+        stream: pointController.listarPontos(user.uid),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
-          final docs = snapshot.data!.docs;
-          if (docs.isEmpty) {
-            return const Center(child: Text('Nenhum ponto registrado ainda.'));
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(child: Text('Nenhum ponto registrado.'));
           }
+
+          final docs = snapshot.data!.docs;
+
           return ListView.builder(
             itemCount: docs.length,
-            itemBuilder: (context, i) {
-              final data = docs[i].data() as Map<String, dynamic>;
+            itemBuilder: (context, index) {
+              final data = docs[index].data() as Map<String, dynamic>;
               final dataHora = DateTime.parse(data['dataHora']);
-              final format = DateFormat('dd/MM/yyyy HH:mm');
+              final formattedDate = DateFormat('dd/MM/yyyy HH:mm:ss').format(dataHora);
+
               return ListTile(
                 leading: const Icon(Icons.access_time, color: Colors.blue),
-                title: Text(format.format(dataHora)),
+                title: Text('Data/Hora: $formattedDate'),
                 subtitle: Text(
-                    'Lat: ${data['latitude']}\nLng: ${data['longitude']}'),
+                  'Latitude: ${data['latitude']}\n'
+                  'Longitude: ${data['longitude']}\n'
+                  'Distância do serviço: ${data['distanciaServico']?.toStringAsFixed(2) ?? '0'} m',
+                ),
               );
             },
           );
