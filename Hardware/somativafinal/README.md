@@ -1,6 +1,6 @@
 # App Registro de Ponto - Flutter + Firebase
 
-Aplicativo simples de registro de ponto para funcionários, com **Firebase Authentication**, **Firestore** e **geolocalização**, desenvolvido em **Flutter** seguindo o padrão **MVC**.  
+Aplicativo mobile simples de registro de ponto para funcionários, com **Firebase Authentication**, **Firestore** e **geolocalização**, desenvolvido em **Flutter** seguindo o padrão **MVC**.  
 Tema principal: **azul e branco**.
 
 ---
@@ -26,17 +26,17 @@ Tema principal: **azul e branco**.
 
 ## 📌 Requisitos Não Funcionais
 
-1. A interface deve ser **responsiva** em dispositivos Android.  
-2. O app deve ser **rápido** e **leve** para uso diário.  
-3. A navegação deve ser **simples** e **intuitiva**.  
-4. Os dados sensíveis do usuário devem ser **autenticados via Firebase Authentication**.  
-5. A arquitetura deve seguir o padrão **MVC** para facilitar manutenção e evolução.  
+1. Interface **responsiva** em dispositivos Android.  
+2. Aplicativo **leve e rápido** para uso diário.  
+3. Navegação **simples e intuitiva**.  
+4. Autenticação segura via **Firebase Authentication**.  
+5. Arquitetura **MVC** para fácil manutenção.  
 
 ---
 
 ## 📊 Diagramas
 
-### 1️⃣ Diagrama de Classes
+### 1️⃣ Diagrama de Classes (MVC Mobile)
 
 ```mermaid
 classDiagram
@@ -67,22 +67,32 @@ classDiagram
     PointController --> HomeView
     PointController --> HistoryView
     UserModel --> AuthController
+
 ```
 
 
 ```mermaid
-%%Diagrama de Casos de Uso
-usecaseDiagram
-    actor Usuario
-    Usuario --> (Registrar Conta)
-    Usuario --> (Login)
-    Usuario --> (Bater Ponto)
-    Usuario --> (Ver Histórico de Pontos)
-```
+graph TD
+    subgraph AppRegistroPonto
+        UC1([Login])
+        UC2([Registrar Conta])
+        UC3([Bater Ponto])
+        UC4([Ver Histórico])
+    end
 
- ```mermaid
-%% Diagrama de Fluxo Principal
-flowchart TD
+    Usuario([Usuário]) --> UC1
+    Usuario --> UC2
+    Usuario --> UC3
+    Usuario --> UC4
+
+    UC3 -.-> UC1
+    UC4 -.-> UC1
+
+```    
+
+
+```mermaid
+graph TD
     A[Início do App] --> B{Usuário logado?}
     B -- Não --> C[LoginView]
     B -- Sim --> D[HomeView]
@@ -93,5 +103,5 @@ flowchart TD
     D --> H[Ver Histórico]
     G --> D
     H --> D
- ```
 
+```
